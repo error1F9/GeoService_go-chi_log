@@ -1,0 +1,180 @@
+basePath: /
+definitions:
+  main.Address:
+    properties:
+      city:
+        type: string
+      house:
+        type: string
+      lat:
+        type: string
+      lon:
+        type: string
+      street:
+        type: string
+    type: object
+  main.GeocodeRequest:
+    properties:
+      lat:
+        example: "55.878"
+        type: string
+      lng:
+        example: "37.653"
+        type: string
+    type: object
+  main.GeocodeResponse:
+    properties:
+      addresses:
+        items:
+          $ref: '#/definitions/main.Address'
+        type: array
+    type: object
+  main.SearchRequest:
+    properties:
+      query:
+        example: мск сухонска 11/-89
+        type: string
+    type: object
+  main.SearchResponse:
+    properties:
+      addresses:
+        items:
+          $ref: '#/definitions/main.Address'
+        type: array
+    type: object
+  main.User:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server Petstore server.
+  termsOfService: http://swagger.io/terms/
+  title: Geo service
+  version: "1.0"
+paths:
+  /address/search:
+    post:
+      consumes:
+      - application/json
+      description: Receive Information by Address
+      operationId: addSearch
+      parameters:
+      - description: Receive information by Address
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/main.SearchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.SearchResponse'
+        "400":
+          description: Empty Query
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: receive Information by Address
+      tags:
+      - AddressSearch
+  /api/address/geocode:
+    post:
+      consumes:
+      - application/json
+      description: Request structure for geocoding addresses
+      operationId: geo
+      parameters:
+      - description: Handle Address by GeoCode
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/main.GeocodeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GeocodeResponse'
+        "400":
+          description: Empty Query
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: receive Address by GeoCode
+      tags:
+      - GeoCode
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Аутентифицирует пользователя и возвращает JWT токен.
+      operationId: login
+      parameters:
+      - description: Данные пользователя для входа
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/main.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Пользователь не существует или неверный пароль
+          schema:
+            type: string
+        "400":
+          description: Некорректный запрос
+          schema:
+            type: string
+      summary: Вход пользователя
+      tags:
+      - Authentication
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Регистрирует нового пользователя.
+      operationId: register
+      parameters:
+      - description: Данные пользователя для регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/main.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Регистрация прошла успешно
+          schema:
+            type: string
+        "400":
+          description: Некорректный запрос или пользователь уже существует
+          schema:
+            type: string
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            type: string
+      summary: Регистрация пользователя
+      tags:
+      - Authentication
+swagger: "2.0"

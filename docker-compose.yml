@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  hugo:
+    container_name: hugo-container
+    image: klakegg/hugo:latest
+    command: server --disableFastRender
+    volumes:
+     - ./hugo:/src
+    ports:
+      - "1313:1313"
+
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: proxy-container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - hugo
+
